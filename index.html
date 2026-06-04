@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Telegram WebApp</title>
+
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+<style>
+
+body{
+font-family:Arial, sans-serif;
+background:
+linear-gradient(rgba(0,0,0,.6),rgba(0,0,0,.6)),
+url("https://i.ibb.co/CsTjSYnN/back.png");
+background-size:cover;
+background-position:center;
+margin:0;
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+color:#fff;
+}
+
+.container{
+width:270px;
+min-height:420px;
+border-radius:12px;
+background:rgba(51,51,51,.95);
+overflow:hidden;
+box-sizing:border-box;
+}
+
+.group-header{
+background:rgba(51,51,51,.95);
+padding:16px 20px;
+text-align:center;
+}
+
+.group-image{
+width:85px;
+height:85px;
+border-radius:50%;
+margin:0 auto 8px;
+background-size:cover;
+background-position:center;
+border:2px solid #1b97df;
+}
+
+.group-name{
+font-size:1.2em;
+font-weight:bold;
+margin-bottom:3px;
+}
+
+.thin-text{
+font-size:0.86em;
+color:#aca7a7;
+margin-top:3px;
+}
+
+.group-footer{
+padding:15px 15px 25px 15px;
+}
+
+.progress-bar{
+width:100%;
+height:8px;
+background:#555;
+border-radius:5px;
+overflow:hidden;
+margin:15px 0;
+}
+
+.progress{
+height:100%;
+width:0%;
+background:#1b97df;
+border-radius:5px;
+transition:width 2s ease;
+}
+
+button{
+display:block;
+width:100%;
+font-size:16px;
+padding:10px;
+margin:10px 0;
+color:#fff;
+background:#0088cc;
+border:none;
+border-radius:5px;
+cursor:pointer;
+text-transform:uppercase;
+font-weight:bold;
+position:relative;
+}
+
+.btn-share{
+background:#286e9f;
+}
+
+.btn-alert{
+background:#286e9f;
+}
+
+.btn-icon{
+width:16px;
+height:16px;
+vertical-align:middle;
+margin-right:6px;
+}
+
+.counter{
+position:absolute;
+top:8px;
+right:10px;
+padding:2px 6px;
+background:rgba(0,0,0,.2);
+border-radius:10px;
+font-size:12px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="group-header">
+
+<div id="groupImage" class="group-image"></div>
+
+<div id="groupName" class="group-name"></div>
+
+<div class="thin-text" id="shareText">
+Share 3 times to unlock and click /start to receive a gift
+</div>
+
+</div>
+
+<div class="group-footer">
+
+<div class="progress-bar">
+<div id="progress" class="progress"></div>
+</div>
+
+<button class="btn-share" onclick="shareLink()">
+
+<img id="shareIcon" class="btn-icon"
+src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg">
+
+SHARE
+
+<span id="shareCounter" class="counter">0/3</span>
+
+</button>
+
+<button class="btn-alert"
+onclick="redirect('https://downyattainprojects.com/k6dgrqyc5g?key=a8ff3a3445842a223c56722310a7ef82')">
+
+<img id="megaIcon"
+class="btn-icon"
+src="https://i.ibb.co/q3JgGYYh/alert.png">
+
+MEGA GIFT
+
+</button>
+
+<button class="btn-alert" onclick="accessLink()">
+
+<img id="accessIcon"
+class="btn-icon"
+src="https://i.ibb.co/gb6ZChYn/popup.png">
+
+ACCESS
+
+</button>
+
+</div>
+</div>
+
+<script>
+
+const groups={
+
+onlyfans:{
+name:"ONLYFANS 🏆",
+image:"https://i.ibb.co/5X0PQH3q/4-1.jpg",
+link1:"https://7a6lt.fotox.app/tg?start=5353490913",
+link2:"https://t.me/+dHWnSvO2Ma84ZTgx",
+link3:"https://7a6lt.fotox.app/tg?start=5353490913",
+shareText:`🔞ᴊᴏɪɴ ᴛʜᴇ ɢʀᴏᴜᴘ ᴏɴʟʏғᴀɴs ʟᴇᴀᴋs🔥
+
+🔥https://kut.lat/ej2R
+
+🔞https://kut.lat/ax9b
+
+🍑https://kut.lat/erEd`
+},
+
+deepweb:{
+name:"DEEP WEB 🔞",
+image:"https://i.ibb.co/NdP0DQJT/6.jpg",
+link1:"https://7a6lt.fotox.app/tg?start=5353490913",
+link2:"https://t.me/+kQ_yw3fyUYFkYTRh",
+link3:"https://7a6lt.fotox.app/tg?start=5353490913",
+shareText:`🔞ᴊᴏɪɴ ᴛʜᴇ ᴡᴇʙ ғɪʟᴛᴇʀᴇᴅ ɢʀᴏᴜᴘ🌐
+
+🤤https://kut.lat/bk55
+
+🍓https://kut.lat/ax9b
+
+😈https://kut.lat/erEd`
+},
+
+sugardaddy:{
+name:"SUGAR DADDY 👅🍭",
+image:"https://i.ibb.co/rK41hHPt/1-1.jpg",
+link1:"https://7a6lt.fotox.app/tg?start=5353490913",
+link2:"https://t.me/+UeyqurUgPK05MDUx",
+link3:"https://7a6lt.fotox.app/tg?start=5353490913",
+shareText:`🔞ᴊᴏɪɴ ᴛʜᴇ ɢʀᴏᴜᴘ ᴍᴏᴍ 💕 sᴏɴ👀
+
+🍭https://kut.lat/elO5
+
+🤤https://kut.lat/ax9b
+
+😱https://kut.lat/erEd`
+},
+
+schoolgirl:{
+name:"SCHOOL GIRL 👩🏻‍🏫🔞",
+image:"https://i.ibb.co/4RcKP59G/3.jpg",
+link1:"https://7a6lt.fotox.app/tg?start=5353490913",
+link2:"https://t.me/+P58etqws_Qo4NzRh",
+link3:"https://7a6lt.fotox.app/tg?start=5353490913",
+shareText:`🔞ᴊᴏɪɴ ᴛʜᴇ ɢʀᴏᴜᴘ sᴄʜᴏᴏʟ ɢɪʀʟ 🤸‍♀️💕
+
+🍑https://kut.lat/bmwO
+
+💦https://kut.lat/ax9b
+
+🎬https://kut.lat/erEd`
+},
+
+naughtygirl:{
+name:"N@UGHTY GIRL 👯‍♀️🔞",
+image:"https://i.ibb.co/q30ZwJv2/7-1.jpg",
+link1:"https://7a6lt.fotox.app/tg?start=5353490913",
+link2:"https://t.me/+NkVqz-wTRfZmNTUx",
+link3:"https://7a6lt.fotox.app/tg?start=5353490913",
+shareText:`🔞ᴊᴏɪɴ ᴛʜᴇ ɢʀᴏᴜᴘ ʀ😈ᴘ³ ᴠɪᴅᴇᴏs
+
+😏https://kut.lat/enZR
+
+🔥https://kut.lat/ax9b
+
+🥵https://kut.lat/erEd`
+},
+
+campiracy:{
+name:"CAM PIRACY 🏴‍☠️🔞",
+image:"https://i.ibb.co/KpgTYdv0/2.jpg",
+link1:"https://7a6lt.fotox.app/tg?start=5353490913",
+link2:"https://t.me/+MV2a40Gna1xkMzJh",
+link3:"https://7a6lt.fotox.app/tg?start=5353490913",
+shareText:`🔞ᴊᴏɪɴ ᴛʜᴇ ɢʀᴏᴜᴘ ᴄᴀᴍ ᴘɪʀᴀᴄʏ 🏴‍☠️🔞
+
+🍒https://kut.lat/boYj
+
+🎁https://kut.lat/ax9b
+
+🔐https://kut.lat/erEd`
+},
+
+transexuales:{
+name:"TRANS & GAY 🏳️‍🌈",
+image:"https://i.ibb.co/nN47YhZp/IMG-20260311-202738-176.jpg",
+link1:"https://7a6lt.fotox.app/tg?start=5353490913",
+link2:"https://t.me/+sMkJf3gtfiFjN2Ux",
+link3:"https://7a6lt.fotox.app/tg?start=5353490913",
+shareText:`🔞ᴊᴏɪɴ ᴛʜᴇ ɢʀᴏᴜᴘ ᴛʀᴀɴs & ɢᴀʏ🏳️‍🌈
+
+💦https://kut.lat/epg2
+
+🍑https://kut.lat/ax9b
+
+🎬https://kut.lat/erEd`
+},
+
+premium:{
+name:"INCEST 🎁",
+image:"https://i.ibb.co/zVgW7B3c/IMG-20251106-164202-134.jpg",
+link1:"https://7a6lt.fotox.app/tg?start=5353490913",
+link2:"https://t.me/+3Y5tQQ9eoEBiOGMx",
+link3:"https://7a6lt.fotox.app/tg?start=5353490913",
+shareText:`🔞ᴊᴏɪɴ ᴛʜᴇ ɢʀᴏᴜᴘ Pʀᴇᴍɪᴜᴍ🎁
+
+🍭https://kut.lat/736y
+
+🍑https://kut.lat/ax9b
+
+🎬https://kut.lat/erEd
+
+🍓1500 ɢʙ нᴀʀᴅ﻿ᴄоʀᴇ ᴀʀᴄнɪᴠᴇ🍓`
+},
+
+valetodo:{
+name:"BRO 🔞 SIS",
+image:"https://i.ibb.co/FLVNcjr4/5-1.jpg",
+link1:"https://7a6lt.fotox.app/tg?start=5353490913",
+link2:"https://t.me/+XdFLEFj1cXMxYmEx",
+link3:"https://7a6lt.fotox.app/tg?start=5353490913",
+shareText:`🔞ᴊᴏɪɴ ᴛʜᴇ ɢʀᴏᴜᴘ ᴛᴇᴇɴ ᴘᴀʀᴛʏ 👅💦
+
+😈https://kut.lat/bqj2
+
+🔞https://kut.lat/ax9b
+
+🔥https://kut.lat/erEd`
+}
+
+};
+
+const keys=Object.keys(groups);
+
+let groupIndex=0;
+let shareCount=0;
+let unlockedShown=false;
+let blocked=false;
+let accessClicks={};
+let pendingShare=false;
+
+/* DETECTAR startapp */
+let startParam=null;
+
+if(window.Telegram && Telegram.WebApp && Telegram.WebApp.initDataUnsafe){
+startParam=Telegram.WebApp.initDataUnsafe.start_param;
+}
+
+if(startParam && groups[startParam]){
+groupIndex=keys.indexOf(startParam);
+}
+
+/* URL fallback */
+let urlParams=new URLSearchParams(window.location.search);
+let webParam=urlParams.get("startapp");
+
+if(webParam && groups[webParam]){
+groupIndex=keys.indexOf(webParam);
+}
+
+loadGroup();
+updateProgress();
+
+function loadGroup(){
+
+let g=groups[keys[groupIndex]];
+
+document.getElementById("groupImage").style.backgroundImage=`url(${g.image})`;
+document.getElementById("groupName").innerText=g.name;
+
+let isIncest=(keys[groupIndex]==="premium");
+
+if(isIncest){
+document.getElementById("shareText").innerText="Share 5 times to unlock and click /start to receive a gift";
+document.getElementById("shareCounter").innerText="0/5";
+}else{
+document.getElementById("shareText").innerText="Share 3 times to unlock and click /start to receive a gift";
+document.getElementById("shareCounter").innerText="0/3";
+}
+
+updateShareButton();
+}
+
+function shareLink(){
+
+if(blocked){
+alert("Wait a few seconds before sharing again.");
+return;
+}
+
+blocked=true;
+setTimeout(()=>blocked=false,3000);
+
+let g=groups[keys[groupIndex]];
+let isIncest=(keys[groupIndex]==="premium");
+
+pendingShare=true;
+
+if(isIncest){
+
+if(shareCount<3){
+window.open(`https://t.me/share/url?text=${encodeURIComponent(g.shareText)}`);
+}else{
+window.open(`https://wa.me/?text=${encodeURIComponent(g.shareText)}`);
+}
+
+}else{
+window.open(`https://t.me/share/url?text=${encodeURIComponent(g.shareText)}`);
+}
+
+}
+
+document.addEventListener("visibilitychange",function(){
+
+if(!document.hidden && pendingShare){
+
+pendingShare=false;
+
+let maxShares=(keys[groupIndex]==="premium")?5:3;
+
+shareCount++;
+
+updateProgress();
+updateShareButton();
+
+if(shareCount===maxShares && !unlockedShown){
+
+unlockedShown=true;
+
+document.getElementById("accessIcon").src=
+document.getElementById("megaIcon").src;
+
+setTimeout(()=>{
+alert("Access unlocked!");
+},3500);
+
+}
+
+if(shareCount>maxShares){
+
+shareCount=0;
+groupIndex=(groupIndex+1)%keys.length;
+unlockedShown=false;
+
+document.getElementById("accessIcon").src=
+"https://i.ibb.co/gb6ZChYn/popup.png";
+
+// 👇 DESACTIVAR ANIMACIÓN TEMPORALMENTE
+let progressBar = document.getElementById("progress");
+progressBar.style.transition = "none";
+
+loadGroup();
+updateProgress();
+
+// 👇 REACTIVAR ANIMACIÓN
+setTimeout(()=>{
+progressBar.style.transition = "width 2s ease";
+},50);
+
+}
+
+}
+
+});
+
+function updateShareButton(){
+
+let isIncest=(keys[groupIndex]==="premium");
+let icon=document.getElementById("shareIcon");
+
+if(!isIncest){
+icon.src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg";
+return;
+}
+
+if(shareCount>=3){
+icon.src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg";
+}else{
+icon.src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg";
+}
+
+}
+
+function updateProgress(){
+
+let maxShares=(keys[groupIndex]==="premium")?5:3;
+
+let width=(shareCount/maxShares)*100;
+
+document.getElementById("progress").style.width=width+"%";
+document.getElementById("shareCounter").innerText=shareCount+"/"+maxShares;
+
+// 👇 TEXTO DINÁMICO
+let remaining = maxShares - shareCount;
+
+if(remaining > 0){
+document.getElementById("shareText").innerText =
+"Share " + remaining + " time" + (remaining>1?"s":"") + " to unlock and click /start to receive a gift";
+}else{
+document.getElementById("shareText").innerText =
+"Access unlocked! Click /start to receive your gift";
+}
+
+}
+
+function accessLink(){
+
+let maxShares=(keys[groupIndex]==="premium")?5:3;
+
+if(shareCount<maxShares){
+alert("Share " + maxShares + " times to unlock access.");
+return;
+}
+
+let key=keys[groupIndex];
+let g=groups[key];
+
+if(!accessClicks[key]){
+accessClicks[key]=0;
+}
+
+accessClicks[key]++;
+
+if(accessClicks[key]==1){
+window.open(g.link1,"_blank");
+}else if(accessClicks[key]==2){
+window.open(g.link2,"_blank");
+}else{
+window.open(g.link3,"_blank");
+}
+
+}
+
+function redirect(link){
+
+// Si es el grupo premium (INCEST)
+if(keys[groupIndex]==="premium"){
+window.open("https://kut.lat/bDxb","_blank");
+return;
+}
+
+// Para el resto de grupos mantiene el comportamiento original
+window.open(link,"_blank");
+
+}
+
+</script>
+
+</body>
+</html>
